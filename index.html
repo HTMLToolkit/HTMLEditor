@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTMLEditor</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script>
+
+  <script type="module" crossorigin src="./assets/index-B35egeFU.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Cv3N24Bk.css">
+<link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script>
+<meta name="theme-color" content="#00bfff">
+<link rel="icon" href="./favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="./apple-touch-icon-180x180.png"></head>
+
+<body>
+    <div class="toolbar">
+        <h1>HTMLEditor</h1>
+        <div class="toolbar-actions">
+            <button id="undoBtn" title="Undo (Ctrl+Z)">Undo</button>
+            <button id="redoBtn" title="Redo (Ctrl+Y)">Redo</button>
+            <button id="saveBtn" title="Save Project">Save</button>
+            <button id="loadBtn" title="Load Project">Load</button>
+            <button id="exportBtn" title="Export Project">Export</button>
+            <button id="deleteBtn" title="Delete Selected Element">Delete</button>
+            <button id="togglePropertiesBtn" title="Toggle Properties Panel">Properties</button>
+            <button id="showShortcutsBtn" title="Show Keyboard Shortcuts">Shortcuts</button>
+            <label class="theme-switch" title="Toggle Dark Mode">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="tools-panel">
+            <div class="tools-section">
+                <h3>Basic Elements</h3>
+                <button class="element-button" data-element="div">Div Container</button>
+                <button class="element-button" data-element="text">Text</button>
+                <button class="element-button" data-element="image">Image</button>
+                <button class="element-button" data-element="button">Button</button>
+            </div>
+
+            <div class="tools-section">
+                <h3>Form Elements</h3>
+                <button class="element-button" data-element="input">Input Field</button>
+                <button class="element-button" data-element="textarea">Text Area</button>
+                <button class="element-button" data-element="select">Dropdown</button>
+                <button class="element-button" data-element="checkbox">Checkbox</button>
+            </div>
+
+            <div class="tools-section">
+                <h3>Layout</h3>
+                <button class="element-button" data-element="flexbox">Flexbox Container</button>
+                <button class="element-button" data-element="grid">Grid Container</button>
+                <button class="element-button" data-element="card">Card</button>
+            </div>
+        </div>
+
+        <div class="workspace">
+            <div id="editor">
+                <div class="editor-tabs">
+                    <div class="editor-tab active" data-tab="html">HTML</div>
+                    <div class="editor-tab" data-tab="css">CSS</div>
+                    <div class="editor-tab" data-tab="js">JavaScript</div>
+                </div>
+                <div class="editor-content">
+                    <div class="tab-content active" id="htmlTab">
+                        <div id="htmlEditor" class="canvas">
+                            <div class="snap-line horizontal" style="display: none;"></div>
+                            <div class="snap-line vertical" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="cssTab">
+                        <div class="code-editor">
+                            <textarea id="cssEditor" spellcheck="false"></textarea>
+                            <pre><code class="language-css" id="cssHighlight"></code></pre>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="jsTab">
+                        <div class="code-editor">
+                            <textarea id="jsEditor" spellcheck="false"></textarea>
+                            <pre><code class="language-javascript" id="jsHighlight"></code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-bar">
+                    <div class="autosave-indicator">Last auto-saved: Never</div>
+                    <div class="editor-info">HTML Editor</div>
+                </div>
+            </div>
+
+            <iframe id="preview"></iframe>
+        </div>
+    </div>
+
+    <div class="properties-panel" id="propertiesPanel">
+        <div class="properties-group">
+            <h3>Position & Size</h3>
+            <div class="property-row">
+                <span class="property-label">Left</span>
+                <input type="number" class="property-input" id="propLeft">
+            </div>
+            <div class="property-row">
+                <span class="property-label">Top</span>
+                <input type="number" class="property-input" id="propTop">
+            </div>
+            <div class="property-row">
+                <span class="property-label">Width</span>
+                <input type="number" class="property-input" id="propWidth">
+            </div>
+            <div class="property-row">
+                <span class="property-label">Height</span>
+                <input type="number" class="property-input" id="propHeight">
+            </div>
+        </div>
+
+        <div class="properties-group">
+            <h3>Appearance</h3>
+            <div class="property-row">
+                <span class="property-label">Background</span>
+                <input type="color" class="property-input" id="propBgColor">
+            </div>
+            <div class="property-row">
+                <span class="property-label">Text Color</span>
+                <input type="color" class="property-input" id="propTextColor">
+            </div>
+            <div class="property-row">
+                <span class="property-label">Font Size</span>
+                <input type="number" class="property-input" id="propFontSize">
+            </div>
+            <div class="property-row">
+                <span class="property-label">Border</span>
+                <input type="text" class="property-input" id="propBorder" placeholder="1px solid black">
+            </div>
+        </div>
+
+        <div class="properties-group">
+            <h3>Content</h3>
+            <div class="property-row">
+                <span class="property-label">Text</span>
+                <input type="text" class="property-input" id="propText">
+            </div>
+            <div class="property-row">
+                <span class="property-label">HTML</span>
+                <textarea class="property-input" id="propHTML" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="keyboard-shortcuts" id="keyboardShortcuts">
+        <button class="close-btn" id="closeShortcuts">×</button>
+        <h2>Keyboard Shortcuts</h2>
+        <table>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">Z</span></td>
+                <td>Undo</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">Y</span></td>
+                <td>Redo</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Delete</span></td>
+                <td>Delete selected element</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">S</span></td>
+                <td>Save project</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">E</span></td>
+                <td>Export project</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">D</span></td>
+                <td>Toggle dark mode</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">P</span></td>
+                <td>Toggle properties panel</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">Arrow Keys</span></td>
+                <td>Fine-tune element position</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">Shift</span> + <span class="shortcut-key">Arrow Keys</span></td>
+                <td>Resize selected element</td>
+            </tr>
+            <tr>
+                <td><span class="shortcut-key">?</span></td>
+                <td>Show this shortcuts panel</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>
