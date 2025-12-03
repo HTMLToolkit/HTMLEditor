@@ -1,4 +1,3 @@
-
 // Main state
 const state = {
     selectedElement: null,
@@ -187,7 +186,7 @@ function createNewElement(type) {
             styles.backgroundColor = '#f1f1f1';
             break;
         case 'text':
-            html = '<p>Text content</p>';
+            html = '<p>Text Content</p>';
             styles.width = '150px';
             break;
         case 'button':
